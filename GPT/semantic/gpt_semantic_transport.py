@@ -17,7 +17,9 @@ class GptSemanticTransportError(RuntimeError):
     pass
 
 
-def request_completion(system_prompt: str, user_prompt: str, model: str, debug: bool) -> str:
+def request_completion(
+    system_prompt: str, user_prompt: str, model: str, debug: bool
+) -> str:
     helpers = _helpers()
     model_name = helpers["resolve_model_name"](model)
     endpoint = _model_endpoint()

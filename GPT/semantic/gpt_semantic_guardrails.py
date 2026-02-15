@@ -61,7 +61,9 @@ def _add_sleep_errors(plan: GptSemanticPlan, max_total: int, errors: list[str]) 
         errors.append(f"Total sleep is {total}ms; maximum is {max_total}ms")
 
 
-def _add_insert_errors(plan: GptSemanticPlan, max_chars: int, errors: list[str]) -> None:
+def _add_insert_errors(
+    plan: GptSemanticPlan, max_chars: int, errors: list[str]
+) -> None:
     for index, step in enumerate(plan.steps, start=1):
         if step.action != "insert_text":
             continue

@@ -69,7 +69,9 @@ def test_mapping_includes_launch_app(monkeypatch) -> None:
 
 
 def test_launch_app_uses_resolved_command(monkeypatch) -> None:
-    monkeypatch.setattr(helpers, "resolve_launch_command", lambda _name: "gnome-text-editor")
+    monkeypatch.setattr(
+        helpers, "resolve_launch_command", lambda _name: "gnome-text-editor"
+    )
     plan = GptSemanticPlan([GptSemanticStep("launch_app", {"app_name": "Gedit"})])
     runner = FakeRunner()
     execute_plan(plan, runner=runner)
@@ -77,7 +79,9 @@ def test_launch_app_uses_resolved_command(monkeypatch) -> None:
 
 
 def test_stop_on_first_error() -> None:
-    plan = GptSemanticPlan([GptSemanticStep("new_tab", {}), GptSemanticStep("copy", {})])
+    plan = GptSemanticPlan(
+        [GptSemanticStep("new_tab", {}), GptSemanticStep("copy", {})]
+    )
     runner = FakeRunner(fail_call="app.tab_open")
     try:
         execute_plan(plan, runner=runner)
@@ -90,15 +94,21 @@ def test_stop_on_first_error() -> None:
 def test_browser_fallbacks() -> None:
     msg = "Action 'browser.go' exists but the Module method is empty and no Context reimplements it"
     runner = FakeRunner(fail_call="browser.go", fail_message=msg)
-    execute_plan(GptSemanticPlan([GptSemanticStep("go_url", {"url": "https://x"})]), runner)
+    execute_plan(
+        GptSemanticPlan([GptSemanticStep("go_url", {"url": "https://x"})]), runner
+    )
     assert ("key", ("ctrl-l",)) in runner.calls
     assert ("insert", ("https://x",)) in runner.calls
 
 
 def test_switch_app_waits_for_focus(monkeypatch) -> None:
     waits: list[tuple[str, str | None]] = []
-    monkeypatch.setattr(step_executor, "wait_for_app_focus", lambda _r, n, c=None: waits.append((n, c)))
-    plan = GptSemanticPlan([GptSemanticStep("switch_app", {"app_name": "Google Chrome"})])
+    monkeypatch.setattr(
+        step_executor, "wait_for_app_focus", lambda _r, n, c=None: waits.append((n, c))
+    )
+    plan = GptSemanticPlan(
+        [GptSemanticStep("switch_app", {"app_name": "Google Chrome"})]
+    )
     runner = FakeRunner()
     execute_plan(plan, runner=runner)
     assert runner.calls[0] == ("user.switcher_focus", ("Google Chrome",))
@@ -107,8 +117,12 @@ def test_switch_app_waits_for_focus(monkeypatch) -> None:
 
 def test_execute_plan_applies_settle_after_each_step(monkeypatch) -> None:
     settled: list[str] = []
-    monkeypatch.setattr(step_executor, "settle_after_step", lambda action, _r: settled.append(action))
-    plan = GptSemanticPlan([GptSemanticStep("new_tab", {}), GptSemanticStep("copy", {})])
+    monkeypatch.setattr(
+        step_executor, "settle_after_step", lambda action, _r: settled.append(action)
+    )
+    plan = GptSemanticPlan(
+        [GptSemanticStep("new_tab", {}), GptSemanticStep("copy", {})]
+    )
     execute_plan(plan, runner=FakeRunner())
     assert settled == ["new_tab", "copy"]
 
@@ -116,9 +130,15 @@ def test_execute_plan_applies_settle_after_each_step(monkeypatch) -> None:
 def test_switch_app_falls_back_to_launch_if_not_running(monkeypatch) -> None:
     waits: list[tuple[str, str | None]] = []
     monkeypatch.setattr(step_executor, "is_running_app", lambda _name: False)
-    monkeypatch.setattr(step_executor, "launch_candidates", lambda _name: ["google-chrome"])
-    monkeypatch.setattr(step_executor, "wait_for_app_focus", lambda _r, n, c=None: waits.append((n, c)))
-    plan = GptSemanticPlan([GptSemanticStep("switch_app", {"app_name": "Google Chrome"})])
+    monkeypatch.setattr(
+        step_executor, "launch_candidates", lambda _name: ["google-chrome"]
+    )
+    monkeypatch.setattr(
+        step_executor, "wait_for_app_focus", lambda _r, n, c=None: waits.append((n, c))
+    )
+    plan = GptSemanticPlan(
+        [GptSemanticStep("switch_app", {"app_name": "Google Chrome"})]
+    )
     runner = FakeRunner()
     execute_plan(plan, runner=runner)
     assert runner.calls[0] == ("user.switcher_launch", ("google-chrome",))

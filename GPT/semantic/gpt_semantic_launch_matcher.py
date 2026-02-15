@@ -19,7 +19,9 @@ class LaunchMatcher:
 
     def resolve(self, app_name: str, entries: LaunchEntries) -> str | None:
         target = normalize_text(app_name)
-        return self._resolve_name(target, entries) or self._resolve_command(target, entries)
+        return self._resolve_name(target, entries) or self._resolve_command(
+            target, entries
+        )
 
     def rank_entries(
         self, query: str, entries: LaunchEntries, limit: int
@@ -30,7 +32,9 @@ class LaunchMatcher:
 
     def _resolve_name(self, target: str, entries: LaunchEntries) -> str | None:
         for name, command in entries:
-            if normalize_text(name) == target or (target and target in normalize_text(name)):
+            if normalize_text(name) == target or (
+                target and target in normalize_text(name)
+            ):
                 return command
         return None
 
@@ -64,5 +68,9 @@ class LaunchMatcher:
         return 0
 
     def _token_score(self, target: str, name_key: str, command_key: str) -> int:
-        tokens = [token for token in target.split() if token not in self.stop_words and len(token) > 1]
+        tokens = [
+            token
+            for token in target.split()
+            if token not in self.stop_words and len(token) > 1
+        ]
         return sum(1 for token in tokens if token in name_key or token in command_key)

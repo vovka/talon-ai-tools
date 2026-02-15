@@ -9,8 +9,8 @@ Called from:
 
 from configparser import ConfigParser
 from pathlib import Path
-from shutil import which
 from shlex import split
+from shutil import which
 
 LaunchEntries = tuple[tuple[str, str], ...]
 
@@ -51,11 +51,15 @@ class DesktopEntryReader:
     def _is_valid_entry(self, parser: ConfigParser) -> bool:
         if parser.get("Desktop Entry", "Type", fallback="") != "Application":
             return False
-        return parser.get("Desktop Entry", "NoDisplay", fallback="false").lower() != "true"
+        return (
+            parser.get("Desktop Entry", "NoDisplay", fallback="false").lower() != "true"
+        )
 
     def _entry_values(self, parser: ConfigParser) -> tuple[str, str] | None:
         name = parser.get("Desktop Entry", "Name", fallback="").strip()
-        command = self._canonical_exec(self._clean_exec(parser.get("Desktop Entry", "Exec", fallback="")))
+        command = self._canonical_exec(
+            self._clean_exec(parser.get("Desktop Entry", "Exec", fallback=""))
+        )
         if not name or not command or self._looks_like_web_shortcut(name, command):
             return None
         return name, command

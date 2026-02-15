@@ -34,4 +34,6 @@ def _is_missing_action(exc: Exception, action_name: str) -> bool:
     message = str(exc).lower()
     if action_name not in message:
         return False
-    return "module method is empty" in message or "no context reimplements it" in message
+    return (
+        "module method is empty" in message or "no context reimplements it" in message
+    )

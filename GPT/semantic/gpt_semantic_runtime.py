@@ -82,12 +82,16 @@ class GptSemanticRuntime:
     def _translate_request(text: str, model: str) -> GptSemanticPlan:
         debug = settings.get("user.gpt_semantic_debug")
         prompt = build_user_prompt(text, semantic_context_text(text))
-        raw = request_completion(settings.get("user.gpt_semantic_system_prompt"), prompt, model, debug)
+        raw = request_completion(
+            settings.get("user.gpt_semantic_system_prompt"), prompt, model, debug
+        )
         try:
             return GptSemanticRuntime._parse_and_validate(raw)
         except GptSemanticParseError as exc:
             repair = build_repair_prompt(raw, exc.errors)
-            fixed = request_completion(settings.get("user.gpt_semantic_system_prompt"), repair, model, debug)
+            fixed = request_completion(
+                settings.get("user.gpt_semantic_system_prompt"), repair, model, debug
+            )
             return GptSemanticRuntime._parse_and_validate(fixed)
 
     @staticmethod

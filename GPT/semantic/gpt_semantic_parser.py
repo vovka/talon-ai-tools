@@ -90,7 +90,9 @@ def _validate_step_keys(index: int, step: dict[str, Any], errors: list[str]) -> 
         errors.append(f"Step {index}: unsupported fields: {', '.join(extras)}")
 
 
-def _validate_args(index: int, action: str, args: dict[str, Any], errors: list[str]) -> None:
+def _validate_args(
+    index: int, action: str, args: dict[str, Any], errors: list[str]
+) -> None:
     spec = ACTION_ARG_SPECS[action]
     missing = sorted(set(spec) - set(args))
     extras = sorted(set(args) - set(spec))
@@ -105,4 +107,6 @@ def _validate_args(index: int, action: str, args: dict[str, Any], errors: list[s
 
 
 def _matches_type(value: Any, expected: type) -> bool:
-    return not (expected is int and isinstance(value, bool)) and isinstance(value, expected)
+    return not (expected is int and isinstance(value, bool)) and isinstance(
+        value, expected
+    )

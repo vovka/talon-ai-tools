@@ -15,7 +15,10 @@ try:
 except (ModuleNotFoundError, ImportError):  # pragma: no cover
     talon_actions = None
 
-from .gpt_semantic_step_executor import GptSemanticExecutionError, GptSemanticStepExecutor
+from .gpt_semantic_step_executor import (
+    GptSemanticExecutionError,
+    GptSemanticStepExecutor,
+)
 from .gpt_semantic_types import GptSemanticPlan
 
 

@@ -13,7 +13,8 @@ from shlex import split
 from typing import Any
 
 try:
-    from talon import settings as talon_settings, ui as talon_ui
+    from talon import settings as talon_settings
+    from talon import ui as talon_ui
 except (ModuleNotFoundError, ImportError):  # pragma: no cover
     talon_settings = None
     talon_ui = None
@@ -53,7 +54,9 @@ def _active_app_matches(hints: list[str]) -> bool:
 
 
 def _name_matches(current: str, hint: str) -> bool:
-    return bool(current and hint and (current == hint or hint in current or current in hint))
+    return bool(
+        current and hint and (current == hint or hint in current or current in hint)
+    )
 
 
 def _focus_hints(app_name: str, command: str | None) -> list[str]:

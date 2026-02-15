@@ -38,7 +38,9 @@ def is_running_app(app_name: str) -> bool:
     if talon_ui is None:
         return True
     target = _normalize_name(app_name)
-    names = [_normalize_name(app.name) for app in talon_ui.apps(background=False) if app.name]
+    names = [
+        _normalize_name(app.name) for app in talon_ui.apps(background=False) if app.name
+    ]
     return any(name == target or target in name or name in target for name in names)
 
 
